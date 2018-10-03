@@ -10,7 +10,7 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    let itemArray = ["Find Mike", "Buy Egos", "Destroy Demogorgon"];
+    var itemArray = ["Find Mike", "Buy Egos", "Destroy Demogorgon"];
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,10 +40,6 @@ class TodoListViewController: UITableViewController {
     // MARK — TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // print(itemArray[indexPath.row])
-        
-        // tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        
         let cell = tableView.cellForRow(at: indexPath)
         let accessoryType = cell?.accessoryType
         
@@ -55,5 +51,34 @@ class TodoListViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    // MARK — Add New Items
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "My Alert", message: nil, preferredStyle: .alert)
+        let addItemAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "Just to cancel it"), style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Add Item", comment: "Default action"), style: .default, handler: { _ in
+            if let name = textField.text {
+                self.itemArray.append(name)
+                self.tableView.reloadData()
+            }
+        })
+        
+        alert.addAction(addItemAction)
+        alert.addAction(cancelAction)
+        
+        alert.addTextField(
+            configurationHandler: {
+                alertTextField in
+                alertTextField.placeholder = "Input a todo name here..."
+                textField = alertTextField
+            }
+        )
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 }
 
